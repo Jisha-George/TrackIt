@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PTH</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<!--SOME APPLE SEETINGS-->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ 
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css"/>
+<link rel="stylesheet" href="css/custom.css"/>
+<link rel="stylesheet" href="css/main.css"/>
+<script src="js/modernizr-3.0.0.min.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+    
+</head>
+
+<body class="online">
+
+<!--note this is outside of the page role so will never get removed and is always accessible-->
+
+  <div id="offline" class="fixed">
+    <h2> You're Offline! </h2>
+        <p> You are currently offline- This means we cannot access your data so you will not be able to see your dashboard.</p>
+    <br>
+        <p>Unfortunately this app needs the internet to show your saved paths and track your future paths. </p>
+    </div>
+
+<!--end offline display-->
+
+<!--home-->    
+<div data-role="page" id="home" data-theme="b">
+    <div data-role="header">
+        <h3>Bike Tracker</h3>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
+            <li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
+            <li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+           </ul>
+         </div>
+    </div>     
+        
+    <div data-role="content">
+        <p>Record and Save Your Biking Paths</p>
+        <button id="home_network_button" data-icon="check">Internet Access Enabled</button>
+        <button id="home_clearstorage_button"> Clear Local Storage</button>
+        <button id="home_seedgps_button">LoadTest Data</button>
+    </div>
+</div>
+    
+<!--home-->
+
+<!--Tracking-->
+<div data-role="page" id="startTracking" data-theme="b">
+    <div data-role="header">
+        <h1>Track Workout</h1>
+        <div data-role="navbar">
+            <ul>
+            <li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
+            <li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
+            <li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+           </ul>
+        </div>
+    </div>
+    <div data-role="content">
+        <p id="startTracking_status"></p>
+        <div data-role="fieldcontain" class="ui-hide-label">
+            <label for="track_id">Track ID/Name:</label>
+            <input type="text" name="track_id" id="track_id" placeholder="Workout ID/Name"/>
+        </div>
+        <button data-role="button" id="startTracking_start">Start Tracking</button>
+        <button data-role="button" id="startTracking_stop">Stop Tracking</button>
+        <p id="startTracking_info"></p>
+    </div>
+</div>
+<!--Tracking-->
+
+<!--History-->
+<div data-role="page" id="history" data-theme="b">
+    <div data-role="header">
+        <h1>History</h1>
+        <div data-role="navbar">
+            <ul>
+            <li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
+            <li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
+            <li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+           </ul>
+        </div>
+    </div>
+    <div data-role="content">
+        <p id="tracks_recorded"></p>
+        <ul data-role="listview" id="history_tracklist">
+        </ul>
+    </div>
+</div>
+<!--History-->
+    
+<!--Tracking Info-->
+<div data-role="page" id="track-info" data-theme="b">
+    <div data-role="header">
+        <h1>Viewing Single Workout</h1>
+        <div data-role="navbar">
+            <ul>
+            <li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
+            <li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
+            <li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+           </ul>
+        </div>
+    </div>
+    <div data-role="content">
+        <p id="track_info_info"></p>
+        <div id="map_canvas" style="position: absolute; bottom: 0;left: 0;width: 100%; height: 300px;">
+        </div>
+    </div>
+</div>
+<!--Tracking Info-->
+    
+<!--scripts at the bottom of the page-->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCYSoP56moZ5ZgMbG7xVprnyiDRSoSbnH4&sensor=false"></script>
+<script src="js/jquery.min.js"></script>
+<!--note jqm defaults defines preferences for JQM so needs to be declared before the library--> 
+<script src="js/jqm_defaults.js"></script>
+<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+<!--high charts stuff with custom theme-->
+<!--high charts stuff-->
+<!--our js file goes last so we know all dependencies are loaded first--> 
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
