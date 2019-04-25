@@ -7,10 +7,10 @@
 
 <!-- versionCode is optional and Android only -->
 
-  <name>Project Treasure Hunt</name>
+  <name>BikeTrack</name>
 
   <description>
-      A historical AR game.
+      An app that allows you to add bike paths as well as allowing you to track your current position for new path.
   </description>
 
   <author href="https://build.phonegap.com" email="support@phonegap.com">

@@ -12,8 +12,6 @@
  
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css"/>
 <link rel="stylesheet" href="css/custom.css"/>
-<link rel="stylesheet" href="css/main.css"/>
-<script src="js/modernizr-3.0.0.min.js"></script>
 <script type="text/javascript" src="cordova.js"></script>
     
 </head>
@@ -80,14 +78,14 @@
 <!--Tracking-->
 
 <!--History-->
-<div data-role="page" id="history" data-theme="b">
+<div data-role="page" id="history" data-theme="b" data-cache="false">
     <div data-role="header">
         <h1>History</h1>
         <div data-role="navbar">
             <ul>
-            <li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
-            <li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
-            <li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+            	<li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
+            	<li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
+            	<li><a href="#history" data-transition="none" data-icon="star">History</a></li>
            </ul>
         </div>
     </div>
@@ -121,6 +119,7 @@
     
 <!--scripts at the bottom of the page-->
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCYSoP56moZ5ZgMbG7xVprnyiDRSoSbnH4&sensor=false"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD3XiX8WHDK02uucffpB7Q43KR4tFhl-KE&callback=initMap"></script>
 <script src="js/jquery.min.js"></script>
 <!--note jqm defaults defines preferences for JQM so needs to be declared before the library--> 
 <script src="js/jqm_defaults.js"></script>

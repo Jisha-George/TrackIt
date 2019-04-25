@@ -13,6 +13,7 @@ var TO_RADIANS = Math.PI / 180;
 var inpg = false;
 var audioElement;
 var i;
+var tracks_recorded;
 
 document.addEventListener("deviceready", function () {
     console.log('device ready');
@@ -28,11 +29,12 @@ function onDeviceReady() {
     console.log(pictureSource, destinationType);
 }
 
-$(document).ready(function () {
+$(document).bind('pageinit')
+{
     console.log("Ready!");
     innit();
     setup();
-});
+};
 
 
 function innit() {
@@ -90,7 +92,7 @@ function setup() {
                     coords: {
                         heading: null,
                         alitude: null,
-                        logitude: position.coords.logitude,
+                        longitude: position.coords.longitude,
                         accuracy: position.coords.accuracy,
                         latitude: position.coords.latitude,
                         speed: position.coords.speed,
@@ -120,8 +122,8 @@ $("#startTracking_stop").on('click', function () {
     navigator.geolocation.clearWatch(watch_id);
     console.log('stop tracking', tracking_data, tracking_data.length, JSON.stringify(tracking_data));
     //save the tracking data
-    if(track_id=='') {
-        track_id='TrackID: ' + Date()
+    if(track_id == '') {
+        track_id = 'TrackID: ' + Date();
         window.localStorage.setItem(track_id, JSON.stringify(tracking_data));
     } else {
     window.localStorage.setItem(track_id, JSON.stringify(tracking_data));
@@ -145,7 +147,7 @@ $("#startTracking_stop").on('click', function () {
 
 $(document).on('pagecreate', '#history', function () {
     console.log('history page');
-    
+	
     //count the number of entries in local Storage and display this information to the user
     tracks_recorded = window.localStorage.length;
     $("#tracks_recorded").html("<strong" + tracks_recorded + "</strong> Workout(s) recorded: ");
@@ -153,12 +155,12 @@ $(document).on('pagecreate', '#history', function () {
     //Empty the list of recorded tracks
     $("#history_tracklist").empty();
      
-    //Iterate over all of the recorded tracks, popilating the list
+    //Iterate over all of the recorded tracks, populating the list
     for (i = 0; i < tracks_recorded; i++) {
-        $("#history_tracklist").append("<li><a href='#track_info' data-ajax='false'>" + window.localStorage.key(i) + "</a><li>");
+        $("#history_tracklist").append("<li><a href='#track_info' data-ajax='false'>" + window.localStorage.key(i) + "</a></li>").trigger("create");
     }
     
-    //tell jsquerymobile to refresh the list
+    //tell jquerymobile to refresh the list
     $("#history_tracklist").listview('refresh');
     
     //when the user clicks a link to view track info, set/change the track_id attribute on the track_info page
@@ -168,8 +170,67 @@ $(document).on('pagecreate', '#history', function () {
     });
 });
 
+$(document).on('pagecreate', '#track_info', function () {
+	//find the track_id of the workout they are viewing
+	var key = $(this).attr("track_id");
+	console.log('track info', key);
+	//Update the Track info page header to the track_id
+	$("#track_info div[data-role=header] h1").text(key);
+	//get all FPS data for the track
+	var data = window.localStorage.getItem(key);
+	//turn stringified GPS data into JS object
+	data = JSON.parse(data);
+	//calculate total distance travelled
+	var total_km = 0;
+	
+	for (i = 0; i < data.length; i++) {
+		
+		if(i == (data.length - 1)) {
+			break;
+		}
+		total_km += gps_distance(data[i].coords.latitude, data[i].coords.longitude, data[i+1].coords.latitude, data[i + 1].coords.longitude);
+	}
+	var total_km_rounded = total_km.toFixed(2);
+								 
+	// Calculate the total time taken for the track
+	var start_time = new Date(data[0].timestamp).getTime();
+	var end_time = new Date(data[data.length-1].timestamp).getTime();
+	var total_time_ms = end_time - start_time;
+	var total_time_s = total_time_ms / 1000;
+	var final_time_m = Math.floor(total_time_s / 1000);
+	var final_time_s = total_time_s - (final_time_m * 60);
+	// Display total distance and time
+	$("#track_info_info").html('Travelled <strong>' + total_km_rounded + '</strong> km in <strong>' + final_time_m + 'm</strong> and <strong>' + final_time_s + 's</strong>');
+		
+	//set initial Lat and Long of google map
+	//takes first coords of tracking
+	var myLatLng = new google.maps.LatLng(data[0].coords.latitude, data[0].coords.longitude);
+	//googleMap options
+	var myoptions = {
+		zoom: 16,
+		center: myLatLng,
+		mapTypeId: google.maps.mapTypeId.ROADMAP
+	};
+	
+	//create the google map set options - google maps api	
+		
+});
 
-
+//Array containing GPS position objests
+function gps_distance(lat1, lon1, lat2, lon2) {
+ // if you like gps maths look at http://www.movable-type.co.uk/scripts/latlong.html
+ //Haversine formula
+ var R = 6371; // Radius of the earth in km
+ var dLat = (lat2 - lat1) * (Math.PI / 180);
+ var dLon = (lon2 - lon1) * (Math.PI / 180);
+ var lat1 = lat1 * (Math.PI / 180);
+ var lat2 = lat2 * (Math.PI / 180);
+ var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+ Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+ var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+ var d = R * c;
+ return d;
+}
 
 $(document).on("pagebeforeshow", function () {
 	// When entering pagetwo
@@ -188,6 +249,9 @@ $(document).on('pagecreate', '#menu', function () {
 	console.log("pagecreate menu");
 });
 
+
+	
+	
 //function onPhotoDataSuccess(imageData) {
 //
 //	// store image data so we can manipulate it, put it in a canvas or img tag
