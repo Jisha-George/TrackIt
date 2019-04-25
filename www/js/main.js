@@ -165,8 +165,8 @@ $(document).on('pagecreate', '#history', function () {
     
     //when the user clicks a link to view track info, set/change the track_id attribute on the track_info page
     $("#history_tracklist li a").on('click', function () {
-        console.log('click track');
-        $("track_info").attr("track_id", $(this).text());
+        $("#track_info").attr("track_id", $(this).text());
+		console.log('click track');
     });
 });
 
@@ -180,6 +180,7 @@ $(document).on('pagecreate', '#track_info', function () {
 	var data = window.localStorage.getItem(key);
 	//turn stringified GPS data into JS object
 	data = JSON.parse(data);
+	
 	//calculate total distance travelled
 	var total_km = 0;
 	
@@ -190,6 +191,7 @@ $(document).on('pagecreate', '#track_info', function () {
 		}
 		total_km += gps_distance(data[i].coords.latitude, data[i].coords.longitude, data[i+1].coords.latitude, data[i + 1].coords.longitude);
 	}
+	
 	var total_km_rounded = total_km.toFixed(2);
 								 
 	// Calculate the total time taken for the track
@@ -199,6 +201,7 @@ $(document).on('pagecreate', '#track_info', function () {
 	var total_time_s = total_time_ms / 1000;
 	var final_time_m = Math.floor(total_time_s / 1000);
 	var final_time_s = total_time_s - (final_time_m * 60);
+	
 	// Display total distance and time
 	$("#track_info_info").html('Travelled <strong>' + total_km_rounded + '</strong> km in <strong>' + final_time_m + 'm</strong> and <strong>' + final_time_s + 's</strong>');
 		
@@ -209,11 +212,29 @@ $(document).on('pagecreate', '#track_info', function () {
 	var myoptions = {
 		zoom: 16,
 		center: myLatLng,
-		mapTypeId: google.maps.mapTypeId.ROADMAP
+		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
 	
 	//create the google map set options - google maps api	
-		
+	var map = new google.maps.Map(document.getElementById("map_canvas"), myoptions);
+	var trackCoords = [];
+	
+	//add each GPS entery to an array
+	for (i = 0; i< data.length; i++) {
+		trackCoords.push(new google.maps.LatLng(data[i].coords.latitude, data[i].coords.longitude));
+	}
+	
+	//plot the GPS entries as a line on the Google Map
+	var trackPath = new google.maps.Polyline({
+		path: trackCoords,
+		//geodesic: true
+		strokeColor: "#FF0000",
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	});
+	
+	//apply line
+	trackPath.setMap(map);
 });
 
 //Array containing GPS position objests
