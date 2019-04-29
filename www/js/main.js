@@ -5,15 +5,13 @@ var w = window.innerWidth || document.documentElement.clientWidth || document.bo
 var h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 //DECLARE GLOBAL VARS
-var wall_bg_image;
+var i, tracks_recorded, map, infoWin;
 var wallslider = null;
 var wallimagedata;
 var image;
 var TO_RADIANS = Math.PI / 180;
 var inpg = false;
 var audioElement;
-var i;
-var tracks_recorded;
 
 document.addEventListener("deviceready", function () {
     console.log('device ready');
@@ -60,6 +58,7 @@ function onOnline() {
     $('body').removeClass('offline');
 }
 
+
 function setup() {
     var track_id = '';
     var watch_id = null;
@@ -99,7 +98,7 @@ function setup() {
                         altitudeAccuracy: null
                     }
                 };
-                //push an array into an arrray (multidimensional)
+                //push an array into an array (multidimensional)
                 tracking_data.push(g);
                 console.log(g, tracking_data.length);
             },
@@ -145,7 +144,7 @@ $("#startTracking_stop").on('click', function () {
 });
 }
 
-$(document).on('pagecreate', '#history', function () {
+$(document).on('click', '#history', function () {
     console.log('history page');
 	
     //count the number of entries in local Storage and display this information to the user
@@ -168,6 +167,38 @@ $(document).on('pagecreate', '#history', function () {
         $("#track_info").attr("track_id", $(this).text());
 		console.log('click track');
     });
+});
+
+$(document).on('pagecreate', '#startTracking', function () {
+	
+	var watch_id = navigator.geolocation.getCurrentPosition(
+            //success
+            function (position) {
+                //temp variable collecting data in an array
+				var cLat = position.coords.latitude;
+				var cLong = position.coords.longitude;
+				
+				var cord = new google.maps.LatLng(cLat,cLong);
+				
+				var options = {
+				zoom: 18,
+				center: cord,
+				mapTypeId: google.maps.MapTypeId.HYBRID
+				};
+				map = new google.maps.Map(document.getElementById("map"), options);
+				var marker = new google.maps.Marker({
+    			position:cord,
+    			map: map
+  				});
+            },
+            //Error
+            function (error) {
+                console.log(error);
+            },
+            //settings
+            {
+                enableHighAccuracy: true
+            });	
 });
 
 $(document).on('pagecreate', '#track_info', function () {
@@ -216,7 +247,7 @@ $(document).on('pagecreate', '#track_info', function () {
 	};
 	
 	//create the google map set options - google maps api	
-	var map = new google.maps.Map(document.getElementById("map_canvas"), myoptions);
+	map = new google.maps.Map(document.getElementById("map_canvas"), myoptions);
 	var trackCoords = [];
 	
 	//add each GPS entery to an array
@@ -253,7 +284,7 @@ function gps_distance(lat1, lon1, lat2, lon2) {
  return d;
 }
 
-$(document).on("pagebeforeshow", function () {
+$(document).on("pagebeforeshow", "#history", function () {
 	// When entering pagetwo
 	//alert("page is about to be shown");
 });
