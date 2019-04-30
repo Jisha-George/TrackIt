@@ -5,13 +5,10 @@ var w = window.innerWidth || document.documentElement.clientWidth || document.bo
 var h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 //DECLARE GLOBAL VARS
-var i, tracks_recorded, map, infoWin;
+var i, tracks_recorded, map;//, wallimagedata, image;
 var wallslider = null;
-var wallimagedata;
-var image;
 var TO_RADIANS = Math.PI / 180;
 var inpg = false;
-var audioElement;
 
 document.addEventListener("deviceready", function () {
     console.log('device ready');
@@ -144,7 +141,7 @@ $("#startTracking_stop").on('click', function () {
 });
 }
 
-$(document).on('click', '#history', function () {
+$(document).on('click', '#startTracking', function () {
     console.log('history page');
 	
     //count the number of entries in local Storage and display this information to the user
@@ -186,10 +183,10 @@ $(document).on('pagecreate', '#startTracking', function () {
 				mapTypeId: google.maps.MapTypeId.HYBRID
 				};
 				map = new google.maps.Map(document.getElementById("map"), options);
-				var marker = new google.maps.Marker({
-    			position:cord,
-    			map: map
-  				});
+                var marker = new google.maps.Marker({
+                position:cord,
+                map: map
+                });
             },
             //Error
             function (error) {
@@ -284,22 +281,22 @@ function gps_distance(lat1, lon1, lat2, lon2) {
  return d;
 }
 
-$(document).on("pagebeforeshow", "#history", function () {
-	// When entering pagetwo
-	//alert("page is about to be shown");
-});
-
-$(document).on("pagecontainershow", function () {
-	// When entering pagetwo
-});
-
-$(document).on("pagecontainerload", function (event, data) {
-	//alert("pageload event fired!");
-});
-
-$(document).on('pagecreate', '#menu', function () {
-	console.log("pagecreate menu");
-});
+//$(document).on("pagebeforeshow", "#history", function () {
+//	// When entering pagetwo
+//	//alert("page is about to be shown");
+//});
+//
+//$(document).on("pagecontainershow", function () {
+//	// When entering pagetwo
+//});
+//
+//$(document).on("pagecontainerload", function (event, data) {
+//	//alert("pageload event fired!");
+//});
+//
+//$(document).on('pagecreate', '#menu', function () {
+//	console.log("pagecreate menu");
+//});
 
 
 	
