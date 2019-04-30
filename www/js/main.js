@@ -5,7 +5,7 @@ var w = window.innerWidth || document.documentElement.clientWidth || document.bo
 var h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 //DECLARE GLOBAL VARS
-var i, tracks_recorded, map, watch_id, track_id;//, wallimagedata, image;
+var i, tracks_recorded, map;//, wallimagedata, image;
 var wallslider = null;
 var TO_RADIANS = Math.PI / 180;
 var inpg = false;
@@ -56,8 +56,8 @@ function onOnline() {
 
 
 function setup() {
-    track_id = '';
-    watch_id = null;
+    var track_id = '';
+    var watch_id = null;
     var tracking_data = [];
     
     $('#home_clearstorage_button').on('click', function (event) {
@@ -68,16 +68,15 @@ function setup() {
         window.localStorage.clear();
     });
     
-    
     $("#startTracking_start").on('click', function () {
         console.log('Start Tracking');
         //Start tracking the User
         //watchPosition- Returns the device's current position when a change in position is detected
-        watch_id = navigator.geolocation.watchPosition(
+       watch_id = navigator.geolocation.watchPosition(
             //success
             function (position) {
                 //temp variable collecting data in an array
-                var g = {
+               var geo = {
                     timestamp: position.timestamp,
                     coords: {
                         heading: null,
@@ -89,13 +88,14 @@ function setup() {
                         altitudeAccuracy: null
                     }
                 };
-                //push an array into an array (multidimensional)
-                tracking_data.push(g);
-                console.log(g, tracking_data.length);
+            //push an array into an array (multidimensional)
+                tracking_data.push(geo);
+                console.log(geo, tracking_data.length);
             },
             //Error
             function (error) {
                 console.log(error);
+                alert('Failed because: ' + error);
             },
             //settings
             {
@@ -104,7 +104,7 @@ function setup() {
         //tidy up the UI
         track_id = $("#track_id").val();
         $("#track_id").hide();
-        $("startTracking_status").gtml("Tracking workout: <strong>" + track_id + "</strong>");
+        $("startTracking_status").html("Tracking workout: <strong>" + track_id + "</strong>");
     });
 
 $("#startTracking_stop").on('click', function () {
@@ -120,7 +120,7 @@ $("#startTracking_stop").on('click', function () {
     }
     //reset watch_id and tracking_data
     watch_id = null;
-    tracking_data = null;
+    tracking_data = [];
     console.log('reset');
     
     //tidy UI
@@ -129,42 +129,43 @@ $("#startTracking_stop").on('click', function () {
 });
    
 $("#home_seedgps_button").on('click', function () {
-        console.log('add storage');
-        window.localStorage.setItem('LINCOLN',
+    console.log('add storage');
+    window.localStorage.setItem('LINCOLN',
 '[{"timestamp":1335700802000,"coords": {"heading":null,"altitude":null,"longitude":-0.544279,"accuracy":0,"latitude":53.226664,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700803000,"coords":{"heading":null,"altitude":null,"longitude":-0.549027,"accuracy":0,"latitude":53.227855,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700804000,"coords":{"heading":null,"altitude":null,"longitude":-0.549128,"accuracy":0,"latitude":53.227976,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700805000,"coords":{"heading":null,"altitude":null,"longitude":-0.548734,"accuracy":0,"latitude":53.228507,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700806000,"coords":{"heading":null,"altitude":null,"longitude":-0.546915,"accuracy":0,"latitude":53.228008,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700807000,"coords":{"heading":null,"altitude":null,"longitude":-0.546687,"accuracy":0,"latitude":53.228063,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700808000,"coords":{"heading":null,"altitude":null,"longitude":-0.546556,"accuracy":0,"latitude":53.228150,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700809000,"coords":{"heading":null,"altitude":null,"longitude":-0.543826,"accuracy":0,"latitude":53.227356,"speed":null,"altitudeAccuracy":null}}]');
 });
 }
 
 $(document).on('pagecreate pageshow', '#home', function () {
 	
-	watch_id = navigator.geolocation.getCurrentPosition(
+	var watch_id = navigator.geolocation.getCurrentPosition(
             //success
-            function (position) {
-                //temp variable collecting data in an array
-				var cLat = position.coords.latitude;
-				var cLong = position.coords.longitude;
-				
-				var cord = new google.maps.LatLng(cLat,cLong);
-				
-				var options = {
-				zoom: 18,
-				center: cord,
-				mapTypeId: google.maps.MapTypeId.HYBRID
-				};
-				map = new google.maps.Map(document.getElementById("map"), options);
-                var marker = new google.maps.Marker({
-                position:cord,
-                map: map
-                });
-            },
-            //Error
-            function (error) {
-                console.log(error);
-            },
-            //settings
-            {
-                enableHighAccuracy: true
-            });	
+        function (position) {
+            //temp variable collecting data in an array
+            var cLat = position.coords.latitude;
+            var cLong = position.coords.longitude;
+
+            var cord = new google.maps.LatLng(cLat,cLong);
+
+            var options = {
+            zoom: 18,
+            center: cord,
+            mapTypeId: google.maps.MapTypeId.HYBRID
+            };
+            map = new google.maps.Map(document.getElementById("map"), options);
+            var marker = new google.maps.Marker({
+            position:cord,
+            map: map
+            });
+        },
+        //Error
+        function (error) {
+            console.log(error);
+            alert('Failed because: ' + error);
+        },
+        //settings
+        {
+            enableHighAccuracy: true
+        });	
 });
 
 $(document).on('pagecreate pageshow click', '#startTracking', function () {
@@ -260,72 +261,6 @@ $(document).on('pagecreate pageshow', '#track_info', function () {
 	trackPath.setMap(map);
 });
 
-//$(document).on('click', '#track_info', function () {
-//	//find the track_id of the workout they are viewing
-//	var key = $(this).attr("track_id");
-//	console.log('track info', key);
-//	//Update the Track info page header to the track_id
-//	$("#track_info div[data-role=header] h1").text(key);
-//	//get all FPS data for the track
-//	var data = window.localStorage.getItem(key);
-//	//turn stringified GPS data into JS object
-//	data = JSON.parse(data);
-//	
-//	//calculate total distance travelled
-//	var total_km = 0;
-//	
-//	for (i = 0; i < data.length; i++) {
-//		
-//		if(i == (data.length - 1)) {
-//			break;
-//		}
-//		total_km += gps_distance(data[i].coords.latitude, data[i].coords.longitude, data[i+1].coords.latitude, data[i+1].coords.longitude);
-//	}
-//	
-//    var total_km_rounded = total_km.toFixed(2);
-//    
-//	// Calculate the total time taken for the track
-//	var start_time = new Date(data[0].timestamp).getTime();
-//	var end_time = new Date(data[data.length-1].timestamp).getTime();
-//	var total_time_ms = end_time - start_time;
-//	var total_time_s = total_time_ms / 1000;
-//	var final_time_m = Math.floor(total_time_s / 60);
-//	var final_time_s = Math.floor(total_time_s % 60);
-//	
-//	// Display total distance and time
-//	$("#track_info_info").html('Travelled <strong>' + total_km_rounded + '</strong> km in <strong>' + final_time_m + 'm</strong> and <strong>' + final_time_s + 's</strong>');
-//		
-//	//set initial Lat and Long of google map
-//	//takes first coords of tracking
-//	var myLatLng = new google.maps.LatLng(data[0].coords.latitude, data[0].coords.longitude);
-//	//googleMap options
-//	var myoptions = {
-//		zoom: 16,
-//		center: myLatLng,
-//		mapTypeId: google.maps.MapTypeId.ROADMAP
-//	};
-//	
-//	//create the google map set options - google maps api	
-//	map = new google.maps.Map(document.getElementById("map_canvas"), myoptions);
-//	var trackCoords = [];
-//	
-//	//add each GPS entery to an array
-//	for (i = 0; i< data.length; i++) {
-//		trackCoords.push(new google.maps.LatLng(data[i].coords.latitude, data[i].coords.longitude));
-//	}
-//	
-//	//plot the GPS entries as a line on the Google Map
-//	var trackPath = new google.maps.Polyline({
-//		path: trackCoords,
-//		//geodesic: true
-//		strokeColor: "#FF0000",
-//		strokeOpacity: 1.0,
-//		strokeWeight: 2
-//	});
-//	
-//	//apply line
-//	trackPath.setMap(map);
-//});
 
 //Array containing GPS position objests
 function gps_distance(lat1, lon1, lat2, lon2) {
@@ -343,26 +278,7 @@ function gps_distance(lat1, lon1, lat2, lon2) {
  return d;
 }
 
-$(document).on("pagebeforeshow", function () {
-	// When entering pagetwo
-	//alert("page is about to be shown");
-});
 
-$(document).on("pagecontainershow", function () {
-	// When entering pagetwo
-});
-
-$(document).on("pagecontainerload", function (event, data) {
-	//alert("pageload event fired!");
-});
-
-$(document).on('pagecreate', '#menu', function () {
-	console.log("pagecreate menu");
-});
-
-
-	
-	
 function onPhotoDataSuccess(imageData) {
 
 	// store image data so we can manipulate it, put it in a canvas or img tag

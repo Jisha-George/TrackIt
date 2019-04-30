@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>PTH</title>
+<title>TrackIt</title>
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -22,7 +22,7 @@
 
   <div id="offline" class="fixed">
     <h2> You're Offline! </h2>
-        <p> You are currently offline- This means we cannot access your data so you will not be able to see your dashboard.</p>
+        <p> You are currently offline- This means we cannot access your data so you will not be able to see your location.</p>
     <br>
         <p>Unfortunately this app needs the internet to show your saved paths and track your future paths. </p>
     </div>
@@ -43,11 +43,13 @@
     </div>     
         
     <div data-role="content">
-        <button id="home_clearstorage_button"> Clear Local Storage</button>
-        <button id="home_seedgps_button">LoadTest Data</button>
-        <p>You Are Currently Here:</p>
-        <div id="map" style="position: absolute; bottom: auto; left: 0; right: 0.5; width: 100%; height: 45%;">
+        <p><strong>You Are Currently Here:</strong></p>
+        <div id="map" style="position: absolute; bottom: auto; left: 0; right: 0.5; width: 100%; height: 60%;">
         </div>
+        <div id="footer">
+        <button id="home_clearstorage_button"> Clear Local Storage</button>
+        </div>
+        
     </div>
 </div>
     
@@ -75,10 +77,8 @@
         <button data-role="button" id="startTracking_stop">Stop Tracking</button>
         <p id="startTracking_info"></p>
         <p id="tracks_recorded"></p>
-        <div>
         <ul data-role="listview" id="history_tracklist">
         </ul>
-        </div>
     </div>
 </div>
 <!--Tracking-->
