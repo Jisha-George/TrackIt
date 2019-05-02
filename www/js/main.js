@@ -287,13 +287,21 @@ function getPhoto() {
 	// Retrieve image file location from specified source
 	navigator.camera.getPicture(onSuccess, onFail, {
 		quality: 80,
-//        destinationType: navigator.camera.DestinationType,
+        destinationType: Camera.DestinationType.FILE_URI,
 //        pictureSource: navigator.camera.PictureSourceType,
 //        allowEdit: true,
 //        cameraDirection: Camera.Direction.BACK
         targetWidth: 300,
         targetHeight: 400
 	});
+    
+    var options = {
+      limit: 1,
+        targetWidth: 300,
+        targetHeight: 400
+    };
+    
+     navigator.device.capture.captureImage(onSuccessMedia, onFail, options);
 }
 
 // Called if something bad happens.
@@ -302,5 +310,17 @@ function onFail(message) {
 }
 
 function onSuccess(imgURI) {
+    // Show the captured photo
     document.getElementById('photo').src = imgURI;
-}
+    console.log(imgURI);
+    }
+
+function onSuccessMedia(mediaFiles) {
+      var i, path, len;
+      for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+         path = mediaFiles[i].fullPath;
+         document.getElementById('photo').src = mediaFiles[i].localURL;
+         console.log(mediaFiles);
+      }
+   }
+    
