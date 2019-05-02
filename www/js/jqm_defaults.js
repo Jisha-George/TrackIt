@@ -13,7 +13,7 @@ jQuery(document).bind("mobileinit", function () {
 	//IMPORTANT
 	jQuery.mobile.phonegapNavigationEnabled = true;
 	//IMPORTANT
-	jQuery.mobile.defaultPageTransition = 'flow';
+	jQuery.mobile.defaultPageTransition = 'none';
 	/*
 	fade
 	pop

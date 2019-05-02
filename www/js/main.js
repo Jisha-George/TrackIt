@@ -10,26 +10,23 @@ var wallslider = null;
 var TO_RADIANS = Math.PI / 180;
 var inpg = false;
 
-document.addEventListener("deviceready", function () {
-    console.log('device ready');
-    setupPush();
-    setup();
-});
+document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     console.log("Device Ready", device.platform);
+    //bypass camera function
     inpg = true;
-    pictureSource = navigator.camera.PictureSourceType;
-    destinationType = navigator.camera.DestinationType;
+    //store camera info on device
+    destinationType = navigator.camera.DestinationType,
+    pictureSource = navigator.camera.PictureSourceType,
     console.log(pictureSource, destinationType);
 }
 
-$(document).bind('pageinit')
-{
+$(document).ready(function () {
     console.log("Ready!");
     innit();
     setup();
-};
+});
 
 function innit() {
     document.addEventListener("online", onOnline, false);
@@ -127,12 +124,18 @@ $("#startTracking_stop").on('click', function () {
     $("#track_id").val("").show();
     $("#startTracking_status").html("Stopped tracking path <strong>" + track_id + "</strong>");
 });
-   
-$("#home_seedgps_button").on('click', function () {
-    console.log('add storage');
-    window.localStorage.setItem('LINCOLN',
-'[{"timestamp":1335700802000,"coords": {"heading":null,"altitude":null,"longitude":-0.544279,"accuracy":0,"latitude":53.226664,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700803000,"coords":{"heading":null,"altitude":null,"longitude":-0.549027,"accuracy":0,"latitude":53.227855,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700804000,"coords":{"heading":null,"altitude":null,"longitude":-0.549128,"accuracy":0,"latitude":53.227976,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700805000,"coords":{"heading":null,"altitude":null,"longitude":-0.548734,"accuracy":0,"latitude":53.228507,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700806000,"coords":{"heading":null,"altitude":null,"longitude":-0.546915,"accuracy":0,"latitude":53.228008,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700807000,"coords":{"heading":null,"altitude":null,"longitude":-0.546687,"accuracy":0,"latitude":53.228063,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700808000,"coords":{"heading":null,"altitude":null,"longitude":-0.546556,"accuracy":0,"latitude":53.228150,"speed":null,"altitudeAccuracy":null}},{"timestamp":1335700809000,"coords":{"heading":null,"altitude":null,"longitude":-0.543826,"accuracy":0,"latitude":53.227356,"speed":null,"altitudeAccuracy":null}}]');
+    
+    $('#TakePic').on('click', function (event) {
+        console.log('say cheese');
+    if (inpg == true) {
+        getPhoto();
+        console.log('photo');
+    } else {
+        onSuccess('ASSETS/London-Skyline-Montage-24x24--186x138.jpg');
+        console.log('sucess');
+    }
 });
+   
 }
 
 $(document).on('pagecreate pageshow', '#home', function () {
@@ -278,93 +281,26 @@ function gps_distance(lat1, lon1, lat2, lon2) {
  return d;
 }
 
-
-function onPhotoDataSuccess(imageData) {
-
-	// store image data so we can manipulate it, put it in a canvas or img tag
-	//this is a global variable and can be accessed when we want - jqm uses ajax so there is no page refresh
-	// so we can store and access with no issues
-	//wallimagedata = imageData;
-
-	// this tells JQM to load in a new page programmatically not through a link
-
-}
-
-// Called when a photos file is successfully retrieved
-//
-function onPhotoFileSuccess(imageData) {
-	// Get image handle
-	//alert('image taken');
-	console.log(JSON.stringify(imageData));
-
-	var wallImage = new Image();
-
-	// Show the captured photo
-	// The inline CSS rules are used to resize the image
-	//
-	wallImage.src = imageData;
-	document.body.appendChild(wallImage);
-}
-
-// Called when a photo is successfully retrieved
-//
-function onPhotoURISuccess(imageURI) {
-	// Uncomment to view the image file URI 
-	console.log('image uri is', imageURI);
-
-	// Get image handle
-	//
-	var largeImage = document.getElementById('largeImage');
-
-	// Unhide image elements
-	//
-	largeImage.style.display = 'block';
-
-	// Show the captured photo
-	// The inline CSS rules are used to resize the image
-	//
-	largeImage.src = imageURI;
-}
-
 // A button will call this function
-//
-function capturePhotoWithData() {
-	console.log('photo event fired');
-	// Take picture using device camera and retrieve image as base64-encoded string
-    navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
-        quality: 80,
-        correctOrientation: true
-    });
-
-}
-
-function capturePhotoWithFile() {
-	navigator.camera.getPicture(onPhotoFileSuccess, onFail, {
-		quality: 80,
-		destinationType: Camera.DestinationType.FILE_URI
-	});
-}
-
-// A button will call this function
-//
-function getPhoto(source) {
+function getPhoto() {
+    console.log('say cheese');
 	// Retrieve image file location from specified source
-	navigator.camera.getPicture(onPhotoURISuccess, onFail, {
+	navigator.camera.getPicture(onSuccess, onFail, {
 		quality: 80,
-		destinationType: destinationType.FILE_URI,
-		sourceType: source
+//        destinationType: navigator.camera.DestinationType,
+//        pictureSource: navigator.camera.PictureSourceType,
+//        allowEdit: true,
+//        cameraDirection: Camera.Direction.BACK
+        targetWidth: 300,
+        targetHeight: 400
 	});
 }
 
 // Called if something bad happens.
-// 
 function onFail(message) {
 	alert('Failed because: ' + message);
 }
 
-function onSuccess(stream) {
-    var video = document.querySelector('video');
-    Video.src = URL.createObjectURL(stream);
-    Video.onloadedmetadata = function (e) {
-    };
+function onSuccess(imgURI) {
+    document.getElementById('photo').src = imgURI;
 }

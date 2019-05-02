@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css"/>
 <link rel="stylesheet" href="css/custom.css"/>
 <script type="text/javascript" src="cordova.js"></script>
-    
+        
 </head>
 
 <body class="online">
@@ -37,7 +37,7 @@
           <ul>
             <li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
             <li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
-            <li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+            <li><a href="#picture" data-transition="none" data-icon="star">Picture</a></li>
            </ul>
          </div>
     </div>     
@@ -63,7 +63,7 @@
             <ul>
             <li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
             <li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
-            <li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+            <li><a href="#picture" data-transition="none" data-icon="star">Picture</a></li>
            </ul>
         </div>
     </div>
@@ -83,23 +83,24 @@
 </div>
 <!--Tracking-->
 
-<!--History-->
-<div data-role="page" id="history" data-theme="b" data-cache="false">
+<!--Picture-->
+<div data-role="page" id="picture" data-theme="b" data-cache="false">
     <div data-role="header">
-        <h1>History</h1>
+        <h1>Picture</h1>
         <div data-role="navbar">
             <ul>
             	<li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
             	<li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
-            	<li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+            	<li><a href="#picture" data-transition="none" data-icon="star">Picture</a></li>
            </ul>
         </div>
     </div>
     <div data-role="content">
-
+        <p><img src="img/icons-36-black.png" id="photo" /></p>
+        <button data-role="button" id="TakePic">Take Picture</button>
     </div>
 </div>
-<!--History-->
+<!--Picture-->
     
 <!--Tracking Info-->
 <div data-role="page" id="track_info" data-theme="b">
@@ -109,7 +110,7 @@
             <ul>
             <li><a href="#home" data-transition="none" data-icon="home">Home</a></li>
             <li><a href="#startTracking" data-transition="none" data-icon="plus">Tracking</a></li>
-            <li><a href="#history" data-transition="none" data-icon="star">History</a></li>
+            <li><a href="#picture" data-transition="none" data-icon="star">Picture</a></li>
            </ul>
         </div>
     </div>
@@ -127,9 +128,7 @@
 <!--note jqm defaults defines preferences for JQM so needs to be declared before the library--> 
 <script src="js/jqm_defaults.js"></script>
 <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
-<!--high charts stuff with custom theme-->
-<!--high charts stuff-->
 <!--our js file goes last so we know all dependencies are loaded first--> 
-<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/main.js"></script> 
 </body>
 </html>

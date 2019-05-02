@@ -10,7 +10,7 @@
   <name>TrackIt</name>
 
   <description>
-      An app that allows you to track your paths for exercise as well as allowing you to take photos of beautiful scenary along tthe way.
+      An app that allows you to track your paths for exercise as well as allowing you to take photos of beautiful scenary along the way.
   </description>
 
   <author href="https://build.phonegap.com" email="support@phonegap.com">
@@ -21,6 +21,7 @@
       This allows your app to load assets from all *.phongap.com domains
     -->
 	<access origin="*" />
+    <access origin="*.google.com"/>
 	
 	<preference name="keepRunning" 				  value="false" />
 	<preference name="AllowInlineMediaPlayback" 	  value="true"/>
@@ -63,17 +64,18 @@
 	
     <!-- Third party plugins -->
 
-    <plugin name="phonegap-plugin-camera" >
+    <plugin name="cordova-plugin-camera" >
 	<variable name="CAMERA_USAGE_DESCRIPTION" value="need camera access to take pictures" />
+    <variabe name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="need access to the gallery to let you add photos" />
 	</plugin>
     
-    <plugin name="phonegap-plugin-media-capture" >
+    <plugin name="cordova-plugin-media-capture" >
 	<variable name="CAMERA_USAGE_DESCRIPTION" value="need photo library access to get pictures from there" />
 	</plugin>
-
-    <plugin name="phonegap-plugin-push" source="npm">
-    <param name="SENDER_ID" value="378250794931" />
-    </plugin>
+    
+    <plugin name="cordova-plugin-geolocation" >
+	<variable name="GEOLOCATION_USAGE_DESCRIPTION" value="Need access to find places nearby" />
+	</plugin>
     <!-- Third party plugins -->
  
     <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
